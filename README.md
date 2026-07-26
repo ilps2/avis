@@ -107,6 +107,41 @@ Processing video with AI is expensive. 1 hour of 1080p video → ~2-5M tokens �
 
 This is not "AI understanding video." This is infrastructure — like JPEG for images or MP4 for playback. AVIS is the compression layer for the AI video pipeline.
 
+
+---
+
+## AVIS as a Standard: The Strategic Case
+
+AVIS solves a rapidly growing cost problem: **eliminating redundant computation**.
+
+Every major AI model processing video today repeats the same work — decode pixels into tensors, run them through an encoder. A 10-minute video processed by GPT-4V, then Gemini, then Claude means the same compute is burned three times. Whoever builds the "encode once, reuse everywhere" intermediate layer becomes the unavoidable link in the pipeline.
+
+Historical standards were born at exactly this inflection point — not inventing new technology, but eliminating redundant waste:
+
+- **JSON** replaced every program writing its own config parser
+- **Markdown** replaced every forum inventing its own formatting syntax
+- **MP3** wasn't the best compression algorithm, but Fraunhofer drove hardware licensing
+- **TCP/IP** beat OSI not on design quality, but because it shipped first
+
+### Winner-Takes-All, But the Inventor Isn't Always the Winner
+
+| Condition | Current Status |
+|---|---|
+| Runnable demo | ✅ avis.py CLI + avis binary format |
+| Benchmark data (cost vs raw video) | Needs to be established |
+| At least one AI video company/project using it | Start with live-clip itself |
+| Published paper or technical blog | Needs to be written |
+| Community discussion / GitHub stars | Needs promotion |
+
+### Path to Adoption: Build a Tool, Let the Standard Grow Organically
+
+Don't write a dead standards document. Build a living developer tool — "the intermediate format CLI for AI video processing." Any AI video developer should be able to use it. Once you have users, the format standard isn't something you push — it's something they demand.
+
+AVIS and live-clip are synergistic — use your own project to store features in AVIS format, record a processing-speed comparison video, and that's your best promotional material.
+
+**Bottom line: AVIS has high long-term potential, but to land it, treat it as a living product, not a dead standard. What you're missing isn't the idea — it's the first user.**
+
 ---
 
 *AVIS does not achieve "true video understanding." It doesn't need to. A map doesn't need to be the territory to be useful.*
+
