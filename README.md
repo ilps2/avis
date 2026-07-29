@@ -1,147 +1,85 @@
-# AVIS — AI Video Interchange Stream
+# AVIS — AI Video Semantic Layer
 
-**A video format designed for AI, not humans.**
+> **给每个视频加一份 AI 能直接读懂的"目录"，不用每次都从头看。**
 
-Traditional video formats (MP4, HEVC) are designed for human eyes — pixel-perfect reconstruction. AVIS is designed for AI consumption — storing **semantic features** instead of pixels. The result: AI processes AVIS video **5-17× cheaper** than traditional formats.
-
-```
-MP4 pipeline:  decode → pixels → VAE/CLIP → tokens     (every frame)
-AVIS pipeline: read features directly → tokens           (I-frames only)
-```
-
-## How It Works
+传统视频格式（MP4、HEVC）是为人类眼睛设计的——像素级重建。AVIS 是为 AI 消费设计的——存储**语义信息**而非像素。结果：一次编码，所有 AI 模型复用，无需重复解码。
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                  AVIS File                           │
-│                                                      │
-│  I-Frame (every N frames):                          │
-│    Full CLIP features (512-dim semantic embedding)   │
-│    + OpenCV features for scheduling                  │
-│                                                      │
-│  Δ-Frame (all other frames):                        │
-│    Lightweight delta from last I-frame               │
-│    Only OpenCV delta (tiny, ~150 bytes)              │
-│                                                      │
-│  Transcript (V3):                                    │
-│    Time-aligned speech-to-text (Whisper)              │
-└─────────────────────────────────────────────────────┘
+传统管线:  MP4 → 解码 → 像素 → CLIP/ViT → tokens    (每次)
+AVIS 管线: 直接读取语义层 → tokens                   (一次编码, 永远复用)
 ```
 
-**Text search on video?** CLIP encodes both text and images into the same 512-dim space. When you search for "comedian on stage with microphone", the query text is encoded to a 512d vector and compared against every I-frame's stored CLIP embedding via cosine similarity. No video decoding needed.
+## 定位
 
-## Backends
+| | 不是 | 而是 |
+|------|------|------|
+| ❌ | 新的视频编码格式 | 视频的 AI 语义索引 |
+| ❌ | 绑定某个模型的特征缓存 | 模型无关的语义表示层 |
+| ❌ | "比 MP4 快 5-17 倍" | "一次编码，所有 AI 复用" |
 
-| Backend | Dim | Speed | Use Case |
-|---------|-----|-------|----------|
-| OpenCV (HSV+Edge) | 74d | 100 fps | Real-time, simple scene detection |
-| PyTorch (MobileNetV3) | 576d | 15 fps | General-purpose, balanced |
-| CLIP (ViT-B-32) | 512d | 12 fps | Semantic search, cross-modal |
-| **Hybrid** (OpenCV + CLIP) | 74d+512d | 60 fps | Best of both: fast scheduling + semantic I-frames |
-| **Multimodal** (+Whisper) | +transcript | — | Full video content indexing |
+AVIS 不替代你的模型。它消除**重复计算**——GPT-4V 处理一遍、Gemini 处理一遍、Claude 处理一遍，三遍都在重复解同样的像素、跑同样的编码器。AVIS 做中间层，编码一次，多方消费。
 
-## Quick Start
+## 语义层
+
+AVIS 不规定"里面存什么特征"，只规定**AI 如何读取语义**。就像 HTML 不规定浏览器怎么渲染，只规定文档结构。
+
+```
+video.mp4          # 给人看
+video.avis/        # 给 AI 看
+├── transcript/    # 时间轴对齐的字幕
+├── scenes/        # 镜头切换与分类
+├── timeline/      # 融合评分时间线
+├── embeddings/    # 帧级语义嵌入（可选，模型可替换）
+└── manifest.json  # 元数据与编码器信息
+```
+
+以后 CLIP 换 SigLIP、Whisper 换其他 ASR——协议不变，语义层不变。
+
+## 路线图
+
+AVIS 不应该是"写出来再推广的协议"，而应该是**从真实产品中长出来的标准**。历史反复证明：Linux、Git、SQLite、FFmpeg——都是先解决自己的问题，再沉淀成基础设施。
+
+| 阶段 | 产品 | 对 AVIS 的意义 |
+|------|------|--------------|
+| 1. AI 视频笔记 | Chrome 插件，中文视频摘要 | 积累完整管线：下载→ASR→切片→摘要 |
+| 2. 视频搜索 | 搜"铜锅"，跳到 4:00；搜"麻酱"，跳到 3:35 | 建立语义索引层 |
+| 3. Video RAG | 开发者 API：`ask(video, question)` | 协议从真实需求中长出来 |
+| 4. AVIS SDK | `from avis import Video` | 成为开发者默认依赖 |
+| 5. 协议 | 开源规范 + 多编码器生态 | 不绑定模型，格式被社区采纳 |
+
+**当前阶段：第一步，AI 视频笔记。** [live-clip](https://github.com/ilps2/live-clip) 是 AVIS 的第一个实现。
+
+## 为什么不是"又一个视频格式"
+
+大多数"AI 视频格式"的问题是绑定了**今天某个模型的特征**——CLIP 768 维向量、VAE latent——模型换代，格式报废。
+
+AVIS 的赌注是：**语义层比具体特征长寿。** 字幕、场景、时间线、知识图谱——这些东西 10 年后任何 AI 都需要。768 维向量？未必。
+
+## 与 live-clip 的关系
+
+```
+live-clip (产品)          AVIS (标准)
+─────────────────        ─────────────────
+Chrome 插件              语义层规范
+下载→ASR→切片→搜索         manifest schema
+付费用户验证需求           编码器无关接口
+真实数据沉淀              长期演进方向
+```
+
+[live-clip](https://github.com/ilps2/live-clip) 赚钱 → 数据验证 AVIS 该存什么 → AVIS 从需求中长出来。
+
+## 本仓库
+
+这是 AVIS 的**旧版二进制格式原型**（`avis/`、`scripts/`）。新架构在当前活跃开发的 [live-clip](https://github.com/ilps2/live-clip) 仓库中（`avis.py` + `avis-online.py`）。
 
 ```bash
-# Encode video with hybrid encoder (fast + semantic)
-python3 -c "
-from avis import encode_video_torch
-encode_video_torch('my_video.mp4', 'my_video.avis')
-"
-
-# Read and search
-from avis.decoder_v2 import AVISDecoderV2
-from avis.query_hybrid import AVISQueryHybrid
-
-with AVISQueryHybrid('my_video.avis', clip_model_path='clip_model.bin') as q:
-    # CLIP text search — finds frames matching description
-    results = q.search_by_text('a person on stage')
-    print(f'Best match: frame {results[0][0]}')
+# live-clip 中的 AVIS CLI
+cd live-clip-repo
+python3 avis.py encode video.mp4 --clip   # 全信号编码
+python3 avis.py search video_avis/ "铜锅"  # 视觉搜索
+python3 avis.py curate "https://b23.tv/xxx"  # B站一键下载+编码
 ```
-
-## Real-World Benchmarks
-
-| Video | Frames | Hybrid Encode | Token Reduction |
-|-------|--------|---------------|-----------------|
-| Synthetic (8s) | 240 | 2s | 7.5× |
-| Stand-up clip (25s) | 635 | 10s | 17.7× |
-| Full stand-up (5min) | 7,902 | 120s | 15×+ |
-
-## File Structure
-
-```
-avis/
-├── format_v2.py          # V2 multi-layer binary format
-├── format_v3.py          # V3 multimodal format (+transcript)
-├── extractors.py         # OpenCV color/edge features
-├── extractors_torch.py   # MobileNetV3 features
-├── encoder_lite.py       # OpenCV backend
-├── encoder_torch.py      # PyTorch backend
-├── encoder_clip.py       # CLIP backend (needs model download)
-├── encoder_hybrid.py     # Hybrid: OpenCV scheduler + CLIP on I-frames
-├── encoder_multimodal.py # Multimodal: +Whisper transcript
-├── decoder.py            # V1 format reader
-├── decoder_v2.py         # V2/V3 format reader
-├── query.py              # V1 query engine
-├── query_hybrid.py       # Hybrid query engine
-└── reader_multimodal.py  # Multimodal reader
-scripts/
-├── demo.py               # 3-way backend comparison (synthetic)
-├── standup_demo.py       # 3-way comparison (real video)
-├── hybrid_demo.py        # Hybrid vs pure comparison
-├── v3_demo.py            # V3 multimodal demo
-└── understand.py         # Full video analysis
-```
-
-## Limitations (Honest)
-
-- **Not "true understanding"** — AVIS tells you *what* is in the frame, not *why* it matters
-- **CLIP text search** works on I-frames only (Δ-frames interpolated from nearest I-frame)
-- **Out-of-distribution content** (anime, heavy text overlays) degrades CLIP quality
-- **CPU-only** — currently no GPU acceleration implemented
-- **No pixel reconstruction** — AVIS is for AI reading, not human viewing
-
-## Why This Matters
-
-Processing video with AI is expensive. 1 hour of 1080p video → ~2-5M tokens → $5-15 in API costs. AVIS reduces that by 5-17× by storing features, not pixels. That's hundreds of dollars saved per video archive per processing pass.
-
-This is not "AI understanding video." This is infrastructure — like JPEG for images or MP4 for playback. AVIS is the compression layer for the AI video pipeline.
-
 
 ---
 
-## AVIS as a Standard: The Strategic Case
-
-AVIS solves a rapidly growing cost problem: **eliminating redundant computation**.
-
-Every major AI model processing video today repeats the same work — decode pixels into tensors, run them through an encoder. A 10-minute video processed by GPT-4V, then Gemini, then Claude means the same compute is burned three times. Whoever builds the "encode once, reuse everywhere" intermediate layer becomes the unavoidable link in the pipeline.
-
-Historical standards were born at exactly this inflection point — not inventing new technology, but eliminating redundant waste:
-
-- **JSON** replaced every program writing its own config parser
-- **Markdown** replaced every forum inventing its own formatting syntax
-- **MP3** wasn't the best compression algorithm, but Fraunhofer drove hardware licensing
-- **TCP/IP** beat OSI not on design quality, but because it shipped first
-
-### Winner-Takes-All, But the Inventor Isn't Always the Winner
-
-| Condition | Current Status |
-|---|---|
-| Runnable demo | ✅ avis.py CLI + avis binary format |
-| Benchmark data (cost vs raw video) | Needs to be established |
-| At least one AI video company/project using it | Start with live-clip itself |
-| Published paper or technical blog | Needs to be written |
-| Community discussion / GitHub stars | Needs promotion |
-
-### Path to Adoption: Build a Tool, Let the Standard Grow Organically
-
-Don't write a dead standards document. Build a living developer tool — "the intermediate format CLI for AI video processing." Any AI video developer should be able to use it. Once you have users, the format standard isn't something you push — it's something they demand.
-
-AVIS and live-clip are synergistic — use your own project to store features in AVIS format, record a processing-speed comparison video, and that's your best promotional material.
-
-**Bottom line: AVIS has high long-term potential, but to land it, treat it as a living product, not a dead standard. What you're missing isn't the idea — it's the first user.**
-
----
-
-*AVIS does not achieve "true video understanding." It doesn't need to. A map doesn't need to be the territory to be useful.*
-
+*AVIS 不追求"真正的视频理解"。地图不需要等于领土才有用。*
