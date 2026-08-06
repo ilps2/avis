@@ -229,3 +229,8 @@ ffmpeg 一样调 `avis` 就行。
 - 自动化代理评估（eval_clips.py）：P@k / GT召回 / 边界误差
 - 实测：对象类规则 P=1.0，关键词过滤后平均 P 0.92 / R 0.72
 - 三层测试法：代理真值 → 人工真值 → 编辑者打分（语义完整/画面完整/可用率）
+
+现成的人工标注包（5 视频 × 2 规则 = 48 个候选片段）在
+[annotation_packs/](annotation_packs/)，标注方法见包内 README：
+播放预览 mp4 → 把 labels.json 的 label 改成 1/0 → 用
+`collect_labels.py` 汇总成真值。
