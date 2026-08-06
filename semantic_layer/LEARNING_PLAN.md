@@ -176,3 +176,86 @@ agent 怎么理解视频——全部能用"论文观点 + 你的实测"双轨回
 - 每篇论文必须产出一个"改 AVIS"的动作，否则这周白读
 - 论文读了 20 篇不如 1 个部署：Moment-DETR、ByteTrack 各部署一次，
   你对"前沿"的理解会超过 90% 只看论文的人
+
+---
+
+## 6. 配套课程（按模块对应）
+
+原则：课程只补"理论底盘"，不替代动手。每个模块最多选 1 门主线课 + 1 个
+动手教程；你已经部署过的部分（GroundingDINO、Whisper、抽帧）直接跳视频、
+只看概念，把时间留给 M4/M5。
+
+### 主干课（先选一条，推荐 A）
+
+| 路线 | 课程 | 适合你的理由 | 时间 |
+|---|---|---|---|
+| A（推荐） | 李沐《动手学深度学习》[zh.d2l.ai](https://zh.d2l.ai/)（B站搜"动手学深度学习"有配套视频） | 免费、中文、PyTorch，覆盖 CNN、注意力、Transformer、目标检测，与你的工具链同栈 | 每周 3-4 小时，按需选章 |
+| B | Stanford CS231n 2025 [B站中英字幕全18讲](https://www.bilibili.com/video/BV19zWVziEsP/) / [官网](https://cs231n.stanford.edu/) | 视觉经典主线：分类→检测→Transformer→视频，李飞飞主讲 | 挑 8-10 讲，每讲 1-2 小时 |
+| C | [3Blue1Brown 神经网络系列](https://www.youtube.com/playlist?list=PLZHQObOWTQDNu6R1_67000Dx_ZCJB-3pi) | 数学直觉动画化，非科班最友好 | 4-6 小时 |
+
+### M1 视频与视觉基础
+
+| 课程 | 平台 | 学什么 | 对应论文/项目 |
+|---|---|---|---|
+| 动手学深度学习（卷积与注意力章节） | d2l | CNN、注意力机制、Transformer | 补 CLIP/BLIP 的底层 |
+| Building Multimodal Search and RAG | [DeepLearning.AI](https://learn.deeplearning.ai/courses/building-multimodal-search-and-rag)（免费） | 对比学习、CLIP 为什么能让图文对齐、多模态向量检索 | CLIP、你的语义层检索 |
+| Audio Course 第 5 章（Whisper） | [Hugging Face](https://huggingface.co/learn/audio-course)（免费） | ASR 原理、Whisper 架构与微调 | Whisper、large-v3 配置 |
+| Image and Video Compression | [Stanford EE398A](https://web.stanford.edu/class/ee398a/)（公开资料） | I/P/B 帧、GOP、运动补偿、H.264 | 你的视频底层知识系统化 |
+| Multimodal Machine Learning | [CMU 11-777](https://cmu-multicomp-lab.github.io/mmml-course/fall2022/)（公开课，可选） | 多模态表示、对齐、融合的理论框架 | 图文融合检索的学术版 |
+
+### M2 检测与跟踪
+
+| 课程 | 平台 | 学什么 | 对应论文/项目 |
+|---|---|---|---|
+| CS231n 2025 目标检测/分割章节 | Stanford/B站 | 检测与分割的现代范式 | DETR、GroundingDINO 前置 |
+| Computer Vision Course | [Hugging Face](https://huggingface.co/learn/computer-vision-course)（免费） | 图像分类、检测、分割的 transformers 实现 | GroundingDINO 部署的理论补充 |
+| Roboflow Notebooks + 实战视频 | [GitHub](https://github.com/roboflow/notebooks)（免费） | YOLOv8 + ByteTrack + Supervision 跟踪实战 | 你的"换 ByteTrack"动手任务 |
+| 【精读AI论文】YOLO 系列 | B站 [同济子豪兄](https://www.bilibili.com/video/BV15w411Z7LG) | 检测器原理的中文精讲 | 读 GroundingDINO 前的热身 |
+| OpenMMLab AI实战营 | B站 [目标检测与MMDetection](https://www.bilibili.com/video/BV1Ak4y1p7W9/) | MMDetection/MMYOLO 中文实战 | 检测/跟踪生态全览 |
+
+### M3 视频时序建模
+
+| 课程 | 平台 | 学什么 | 对应论文/项目 |
+|---|---|---|---|
+| EECS 498 Lecture "Videos" | [密歇根大学公开课](https://web.eecs.umich.edu/~justincj/teaching/eecs498/FA2020/schedule.html)（课件公开，录像在 Michigan Online/YouTube） | 视频分类、早/晚融合、3D CNN、双流网络 | TimeSformer/SlowFast 的地基 |
+| UvA Deep Learning Course | [uvadlc.github.io](https://uvadlc.github.io/)（公开课） | Transformer 原理 + 视频处理专题 | Qwen2-VL、Video-LLaVA 原理 |
+| Building Multimodal Data Pipelines | [DeepLearning.AI](https://learn.deeplearning.ai/courses/building-multimodal-data-pipelines)（免费） | VLM 处理视频帧、生成带时间戳的场景描述 | 和你的 AVIS 管线几乎同构 |
+
+### M4 低成本与高效 ★
+
+| 课程 | 平台 | 学什么 | 对应论文/项目 |
+|---|---|---|---|
+| TinyML and Efficient Deep Learning Computing | [MIT 6.5940](https://hanlab.mit.edu/courses/2024-fall-65940)（YouTube 公开录像；[中文笔记](https://github.com/erectbranch/MIT-Efficient-AI)） | 剪枝、量化、蒸馏、LLM 压缩 | QLoRA、token/算力成本理论 |
+| LLM Course 量化章节 | [Hugging Face](https://huggingface.co/learn/llm-course)（免费） | bitsandbytes、QLoRA 实操 | 你的模型瘦身方案 |
+| EE398A 压缩域部分 | Stanford（见 M1） | 运动矢量、帧间编码 | CoViAR、MoCrop 的底层知识 |
+
+### M5 时序定位与检索
+
+| 课程 | 平台 | 学什么 | 对应论文/项目 |
+|---|---|---|---|
+| Building Multimodal Search and RAG | DeepLearning.AI（见 M1） | query→向量→top-k 检索全流程 | Moment-DETR 之前的检索形式化 |
+| Retrieval Optimization | [DeepLearning.AI + Qdrant](https://community.deeplearning.ai/t/new-course-enroll-in-retrieval-optimization-from-tokenization-to-vector-quantization/702150)（免费） | tokenization、向量量化、检索优化 | 语义层索引效率进阶 |
+| AI Agents / Agents Course | [DeepLearning.AI](https://learn.deeplearning.ai/courses/ai-agents) / [Hugging Face](https://huggingface.co/learn/agents-course)（免费） | 工具调用、记忆、多步推理 | VideoAgent、你的 MCP server |
+
+### M6 应用与评测
+
+| 课程 | 平台 | 学什么 | 对应论文/项目 |
+|---|---|---|---|
+| Machine Learning Crash Course 分类指标 | [Google](https://developers.google.com/machine-learning/crash-course)（免费） | 精确率/召回率、混淆矩阵、AUC | 你的 P/R 评估的地基 |
+| Evaluating and Debugging Generative AI | [DeepLearning.AI](https://learn.deeplearning.ai/courses/evaluating-debugging-generative-ai)（免费） | 实验跟踪、评测与调试流程 | eval_clips 的方法论 |
+| Practical Deep Learning for Coders（可选） | [fast.ai](https://course.fast.ai/)（免费） | 从训练到部署的完整项目闭环 | 作品集项目化 |
+
+### 没有专门课程的模块怎么学
+
+- Moment-DETR、GroundVTS、QuoTA 等新论文没有课程：读论文 + 官方 repo README，
+  必要时让我按你的水平讲人话、画架构。
+- ByteTrack 有完整实战教程：搜 "Roboflow ByteTrack" 或直接跑
+  [roboflow/notebooks](https://github.com/roboflow/notebooks) 里的跟踪 notebook。
+- 视频摘要（EDSNet）和生成式剪辑（InstructVideo）也没有课程：用
+  "论文 + AI 陪读"方式，重点落在任务定义和评测基准上。
+
+### 时间预算
+
+每周课程 4-6 小时，不挤占论文（2 篇/周）和周末实验（2-3 小时）。
+主干课 A 的章节按模块穿插学；短课（DeepLearning.AI / Hugging Face）每门 1-2 天可完成。
+学完每门课必须回答一个问题：这个知识点怎么改我的 AVIS？
