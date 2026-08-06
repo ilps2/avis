@@ -1,0 +1,59 @@
+{"type": "object", "track_id": 1, "label": "face", "tier": "主角", "appearance": 0, "t0": 0.0, "t1": 88.0, "n_dets": 89, "description": "a woman holding up a bottle of liquid"}
+{"type": "object", "track_id": 2, "label": "person", "tier": "主角", "appearance": 0, "t0": 0.0, "t1": 88.0, "n_dets": 89, "description": "a woman in a black dress is holding a watch"}
+{"type": "object", "track_id": 3, "label": "clothes", "tier": "主角", "appearance": 0, "t0": 0.0, "t1": 8.0, "n_dets": 7, "description": "a woman holding a box with a watch"}
+{"type": "object", "track_id": 4, "label": "person", "tier": "主角", "appearance": 0, "t0": 0.0, "t1": 16.0, "n_dets": 14, "description": "a woman holding a cell phone in front of a pink heart"}
+{"type": "object", "track_id": 5, "label": "lipstick", "tier": "配角", "appearance": 0, "t0": 0.0, "t1": 7.0, "n_dets": 6, "description": "lipstick"}
+{"type": "object", "track_id": 6, "label": "price tag", "tier": "配角", "appearance": 0, "t0": 0.0, "t1": 6.0, "n_dets": 6, "description": "price tag"}
+{"type": "object", "track_id": 7, "label": "price tag", "tier": "主角", "appearance": 0, "t0": 0.0, "t1": 64.0, "n_dets": 57, "description": "a woman is sitting in a chair with a box"}
+{"type": "object", "track_id": 8, "label": "clothes", "tier": "主角", "appearance": 0, "t0": 0.0, "t1": 37.0, "n_dets": 30, "description": "a woman holding a box with a necklace"}
+{"type": "object", "track_id": 9, "label": "box", "tier": "龙套", "appearance": 0, "t0": 0.0, "t1": 0.0, "n_dets": 1, "description": "box"}
+{"type": "object", "track_id": 10, "label": "clothes", "tier": "主角", "appearance": 0, "t0": 1.0, "t1": 9.0, "n_dets": 9, "description": "a woman holding a box of makeup"}
+{"type": "object", "track_id": 10, "label": "clothes", "tier": "主角", "appearance": 1, "t0": 13.0, "t1": 34.0, "n_dets": 21, "description": "a woman holding a box of makeup"}
+{"type": "object", "track_id": 11, "label": "hand", "tier": "龙套", "appearance": 0, "t0": 4.0, "t1": 4.0, "n_dets": 1, "description": "hand"}
+{"type": "object", "track_id": 12, "label": "hand", "tier": "龙套", "appearance": 0, "t0": 4.0, "t1": 4.0, "n_dets": 1, "description": "hand"}
+{"type": "object", "track_id": 13, "label": "price tag", "tier": "配角", "appearance": 0, "t0": 4.0, "t1": 6.0, "n_dets": 3, "description": "price tag"}
+{"type": "object", "track_id": 14, "label": "box", "tier": "龙套", "appearance": 0, "t0": 5.0, "t1": 6.0, "n_dets": 2, "description": "box"}
+{"type": "object", "track_id": 15, "label": "lipstick", "tier": "配角", "appearance": 0, "t0": 8.0, "t1": 15.0, "n_dets": 8, "description": "lipstick"}
+{"type": "object", "track_id": 16, "label": "cosmetics", "tier": "龙套", "appearance": 0, "t0": 10.0, "t1": 10.0, "n_dets": 1, "description": "cosmetics"}
+{"type": "object", "track_id": 17, "label": "clothes", "tier": "龙套", "appearance": 0, "t0": 14.0, "t1": 15.0, "n_dets": 2, "description": "clothes"}
+{"type": "object", "track_id": 18, "label": "lipstick", "tier": "配角", "appearance": 0, "t0": 16.0, "t1": 20.0, "n_dets": 3, "description": "lipstick"}
+{"type": "object", "track_id": 19, "label": "tablet", "tier": "配角", "appearance": 0, "t0": 17.0, "t1": 19.0, "n_dets": 3, "description": "tablet"}
+{"type": "object", "track_id": 20, "label": "price tag", "tier": "龙套", "appearance": 0, "t0": 19.0, "t1": 19.0, "n_dets": 1, "description": "price tag"}
+{"type": "object", "track_id": 21, "label": "person", "tier": "主角", "appearance": 0, "t0": 21.0, "t1": 88.0, "n_dets": 65, "description": "a woman holding a pink heart shaped object"}
+{"type": "object", "track_id": 22, "label": "cosmetics", "tier": "龙套", "appearance": 0, "t0": 24.0, "t1": 24.0, "n_dets": 1, "description": "cosmetics"}
+{"type": "object", "track_id": 23, "label": "lipstick", "tier": "配角", "appearance": 0, "t0": 24.0, "t1": 26.0, "n_dets": 2, "description": "lipstick"}
+{"type": "object", "track_id": 24, "label": "price tag", "tier": "配角", "appearance": 0, "t0": 25.0, "t1": 28.0, "n_dets": 4, "description": "price tag"}
+{"type": "object", "track_id": 25, "label": "lipstick", "tier": "龙套", "appearance": 0, "t0": 27.0, "t1": 28.0, "n_dets": 2, "description": "lipstick"}
+{"type": "object", "track_id": 26, "label": "clothes", "tier": "主角", "appearance": 0, "t0": 27.0, "t1": 88.0, "n_dets": 53, "description": "a woman in a black dress sitting at a table"}
+{"type": "object", "track_id": 27, "label": "clothes", "tier": "主角", "appearance": 0, "t0": 28.0, "t1": 38.0, "n_dets": 8, "description": "a woman in a black dress is holding a bottle"}
+{"type": "object", "track_id": 28, "label": "lipstick", "tier": "配角", "appearance": 0, "t0": 30.0, "t1": 30.0, "n_dets": 1, "description": "lipstick"}
+{"type": "object", "track_id": 28, "label": "lipstick", "tier": "配角", "appearance": 1, "t0": 34.0, "t1": 35.0, "n_dets": 2, "description": "lipstick"}
+{"type": "object", "track_id": 29, "label": "price tag", "tier": "配角", "appearance": 0, "t0": 31.0, "t1": 33.0, "n_dets": 3, "description": "price tag"}
+{"type": "object", "track_id": 30, "label": "lipstick", "tier": "主角", "appearance": 0, "t0": 32.0, "t1": 32.0, "n_dets": 1, "description": "a woman with red lipstick and a black dress"}
+{"type": "object", "track_id": 30, "label": "lipstick", "tier": "主角", "appearance": 1, "t0": 36.0, "t1": 80.0, "n_dets": 40, "description": "a woman with a pink lipstick and a black shirt"}
+{"type": "object", "track_id": 31, "label": "cosmetics", "tier": "龙套", "appearance": 0, "t0": 39.0, "t1": 39.0, "n_dets": 1, "description": "cosmetics"}
+{"type": "object", "track_id": 32, "label": "cosmetics", "tier": "龙套", "appearance": 0, "t0": 39.0, "t1": 39.0, "n_dets": 1, "description": "cosmetics"}
+{"type": "object", "track_id": 33, "label": "cosmetics", "tier": "龙套", "appearance": 0, "t0": 39.0, "t1": 39.0, "n_dets": 1, "description": "cosmetics"}
+{"type": "object", "track_id": 34, "label": "price tag", "tier": "配角", "appearance": 0, "t0": 40.0, "t1": 42.0, "n_dets": 3, "description": "price tag"}
+{"type": "object", "track_id": 35, "label": "clothes", "tier": "主角", "appearance": 0, "t0": 43.0, "t1": 43.0, "n_dets": 1, "description": "a woman in a black dress sitting at a table"}
+{"type": "object", "track_id": 35, "label": "clothes", "tier": "主角", "appearance": 1, "t0": 47.0, "t1": 57.0, "n_dets": 10, "description": "a woman sitting at a table with a cup"}
+{"type": "object", "track_id": 36, "label": "person", "tier": "配角", "appearance": 0, "t0": 43.0, "t1": 43.0, "n_dets": 1, "description": "person"}
+{"type": "object", "track_id": 36, "label": "person", "tier": "配角", "appearance": 1, "t0": 47.0, "t1": 47.0, "n_dets": 1, "description": "person"}
+{"type": "object", "track_id": 37, "label": "cosmetics", "tier": "配角", "appearance": 0, "t0": 44.0, "t1": 47.0, "n_dets": 4, "description": "cosmetics"}
+{"type": "object", "track_id": 38, "label": "price tag", "tier": "配角", "appearance": 0, "t0": 48.0, "t1": 51.0, "n_dets": 4, "description": "price tag"}
+{"type": "object", "track_id": 39, "label": "cosmetics", "tier": "配角", "appearance": 0, "t0": 54.0, "t1": 56.0, "n_dets": 2, "description": "cosmetics"}
+{"type": "object", "track_id": 40, "label": "cosmetics", "tier": "龙套", "appearance": 0, "t0": 55.0, "t1": 56.0, "n_dets": 2, "description": "cosmetics"}
+{"type": "object", "track_id": 41, "label": "clothes", "tier": "主角", "appearance": 0, "t0": 55.0, "t1": 58.0, "n_dets": 3, "description": "a woman holding a small box of cosmetics"}
+{"type": "object", "track_id": 41, "label": "clothes", "tier": "主角", "appearance": 1, "t0": 62.0, "t1": 77.0, "n_dets": 14, "description": "a woman sitting in front of a mirror"}
+{"type": "object", "track_id": 41, "label": "clothes", "tier": "主角", "appearance": 2, "t0": 81.0, "t1": 88.0, "n_dets": 8, "description": "a woman in a black dress sitting on a chair"}
+{"type": "object", "track_id": 42, "label": "price", "tier": "龙套", "appearance": 0, "t0": 57.0, "t1": 58.0, "n_dets": 2, "description": "price"}
+{"type": "object", "track_id": 43, "label": "cosmetics", "tier": "龙套", "appearance": 0, "t0": 64.0, "t1": 64.0, "n_dets": 1, "description": "cosmetics"}
+{"type": "object", "track_id": 44, "label": "cosmetics", "tier": "龙套", "appearance": 0, "t0": 65.0, "t1": 65.0, "n_dets": 1, "description": "cosmetics"}
+{"type": "object", "track_id": 45, "label": "price tag", "tier": "配角", "appearance": 0, "t0": 67.0, "t1": 69.0, "n_dets": 3, "description": "price tag"}
+{"type": "object", "track_id": 46, "label": "cosmetics", "tier": "配角", "appearance": 0, "t0": 69.0, "t1": 72.0, "n_dets": 3, "description": "cosmetics"}
+{"type": "object", "track_id": 47, "label": "price tag", "tier": "配角", "appearance": 0, "t0": 69.0, "t1": 73.0, "n_dets": 3, "description": "price tag"}
+{"type": "object", "track_id": 48, "label": "lipstick", "tier": "配角", "appearance": 0, "t0": 70.0, "t1": 72.0, "n_dets": 2, "description": "lipstick"}
+{"type": "object", "track_id": 49, "label": "person", "tier": "龙套", "appearance": 0, "t0": 70.0, "t1": 70.0, "n_dets": 1, "description": "person"}
+{"type": "object", "track_id": 50, "label": "clothes", "tier": "龙套", "appearance": 0, "t0": 76.0, "t1": 76.0, "n_dets": 1, "description": "clothes"}
+{"type": "object", "track_id": 51, "label": "cosmetics", "tier": "配角", "appearance": 0, "t0": 80.0, "t1": 83.0, "n_dets": 3, "description": "cosmetics"}
+{"type": "object", "track_id": 52, "label": "lipstick", "tier": "龙套", "appearance": 0, "t0": 84.0, "t1": 85.0, "n_dets": 2, "description": "lipstick"}

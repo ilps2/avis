@@ -1,0 +1,60 @@
+{
+  "avis_version": "0.1.0",
+  "mode": {
+    "mode": "avis_full",
+    "reason": "balanced",
+    "speech_coverage": 1.0,
+    "transcript_chars": 463,
+    "object_density": 6.5,
+    "labels_probed": [
+      "box",
+      "clothes",
+      "cosmetics",
+      "face",
+      "lipstick",
+      "person",
+      "price tag",
+      "price tag stick"
+    ],
+    "probe_frames": 8
+  },
+  "video": {
+    "codec": "h264",
+    "width": 720,
+    "height": 1572,
+    "fps": 60.0,
+    "orientation": "vertical",
+    "path": "/Users/chuli/Desktop/样本7_切片/clip_03_1061-1150s.mp4",
+    "name": "clip_03_1061-1150s.mp4",
+    "stem": "clip_03_1061-1150s",
+    "duration": 89.0,
+    "format": "semantic-layer-demo"
+  },
+  "signals": {
+    "asr": {
+      "path": "asr.jsonl",
+      "segments": 38,
+      "model": "large-v3"
+    },
+    "scenes": {
+      "path": "scenes.jsonl",
+      "boundaries": 8
+    },
+    "objects": {
+      "path": "objects.jsonl",
+      "timeline": "timeline.jsonl",
+      "embeddings": "embeddings.npz",
+      "tracks": 52,
+      "appearances": 59,
+      "tiers": {
+        "主角": 13,
+        "配角": 20,
+        "龙套": 19
+      }
+    }
+  },
+  "timeline": {
+    "duration_sec": 89.0
+  },
+  "clips": []
+}

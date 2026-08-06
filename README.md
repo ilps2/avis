@@ -2,6 +2,18 @@
 
 > **给每个视频加一份 AI 能直接读懂的"目录"，不用每次都从头看。**
 
+## 参考实现：semantic_layer/
+
+[semantic_layer/](semantic_layer/) 是 AVIS 协议第一个完整实现：
+
+- **对象级语义层**：检测 + 跟踪 + 对象向量 + 主配角分层 + 统一时间轴
+- **自动分诊**：先探测语音/对象密度，自动选纯 ASR 索引或完整 AVIS 索引
+- **MCP Server**：encode / search / understand 三件套，agent 直接调用
+- **实测基准**：token 对比（~200× 节省）、11 查询精度评估、抽帧率实验
+- **示例索引**：89 秒直播切片的可直接查询索引
+
+快速开始见 [semantic_layer/README.md](semantic_layer/README.md)。
+
 传统视频格式（MP4、HEVC）是为人类眼睛设计的——像素级重建。AVIS 是为 AI 消费设计的——存储**语义信息**而非像素。结果：一次编码，所有 AI 模型复用，无需重复解码。
 
 ```

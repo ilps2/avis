@@ -1,0 +1,6 @@
+__pycache__/
+frames/
+audio.wav
+thumbs/
+*.npy
+.DS_Store

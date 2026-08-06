@@ -1,0 +1,90 @@
+{
+  "semantic_layer_version": "0.2.1",
+  "mode": {
+    "mode": "avis_full",
+    "reason": "balanced",
+    "speech_coverage": 1.0,
+    "transcript_chars": 463,
+    "object_density": 6.5,
+    "labels_probed": [
+      "box",
+      "clothes",
+      "cosmetics",
+      "face",
+      "lipstick",
+      "person",
+      "price tag",
+      "price tag stick"
+    ],
+    "probe_frames": 8
+  },
+  "video": {
+    "path": "/Users/chuli/Desktop/样本7_切片/clip_03_1061-1150s.mp4",
+    "duration_sec": 89.0,
+    "fps_sampled": 1.0
+  },
+  "stats": {
+    "frames": 89,
+    "detections": 614,
+    "tracks": 52,
+    "appearances": 59,
+    "scenes": 8,
+    "asr_segments": 38,
+    "tiers": {
+      "主角": 13,
+      "配角": 20,
+      "龙套": 19
+    },
+    "build_sec": 255.6,
+    "index_bytes": 6284980,
+    "timeline_bytes": 623860
+  },
+  "models": {
+    "detector": "IDEA-Research/grounding-dino-base",
+    "visual": "openai/clip-vit-base-patch32",
+    "captioner": "Salesforce/blip-image-captioning-base",
+    "text": "paraphrase-multilingual-MiniLM-L12-v2",
+    "asr": "Systran/faster-whisper-large-v3"
+  },
+  "prompts": [
+    "person",
+    "face",
+    "hand",
+    "phone",
+    "smartphone",
+    "bottle",
+    "cup",
+    "drink",
+    "product",
+    "package",
+    "box",
+    "bag",
+    "lipstick",
+    "cosmetics",
+    "makeup",
+    "watch",
+    "glasses",
+    "laptop",
+    "tablet",
+    "microphone",
+    "book",
+    "paper",
+    "card",
+    "remote",
+    "keyboard",
+    "mouse",
+    "chair",
+    "table",
+    "screen",
+    "monitor",
+    "shoes",
+    "hat",
+    "toy",
+    "food",
+    "camera",
+    "clothes",
+    "price tag",
+    "sticker",
+    "sample"
+  ]
+}
