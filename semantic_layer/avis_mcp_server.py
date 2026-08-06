@@ -161,6 +161,41 @@ def understand_video(idx_dir: str, query: str, top_k: int = 5,
 
 
 @mcp.tool()
+def plan_clips(idx_dir: str, text: str | None = None, image: str | None = None,
+               object_labels: str = "", require_speech: bool = True,
+               min_dur: float = 5.0, max_dur: float = 180.0,
+               max_clips: int = 10, align_scenes: bool = True,
+               target_dur: float = 20.0, max_window: float = 30.0,
+               keywords: str = "") -> str:
+    """AI 剪辑规划：语义检索 + 对象/语音过滤 + 场景对齐 -> 剪辑清单。
+
+    每条剪辑都带 t0/t1、时长、命中证据和语音文本，可直接交给 ffmpeg
+    或 live-clip 执行切割。
+
+    Args:
+        idx_dir: 语义层索引目录
+        text: 语义查询词（如"口红"）
+        image: 参考图路径
+        object_labels: 逗号分隔对象标签（如 "lipstick,price tag"）
+        require_speech: 是否只保留有语音的片段
+        min_dur/max_dur: 片段时长范围（秒）
+        max_clips: 最多输出几条
+        align_scenes: 是否把边界对齐到场景切换点
+        target_dur: 目标片段时长，超长片段按场景边界切分
+        max_window: 候选窗口最大时长
+        keywords: 关键词交叉验证（逗号分隔）：最终片段的语音必须包含任一关键词
+    """
+    labels = [x.strip() for x in object_labels.split(",") if x.strip()] if object_labels else None
+    kws = [x.strip() for x in keywords.split(",") if x.strip()] if keywords else None
+    plan = _silent(sl.plan_clips, Path(idx_dir), text=text, image=image,
+                   object_labels=labels, require_speech=require_speech,
+                   min_dur=min_dur, max_dur=max_dur, max_clips=max_clips,
+                   align_scenes=align_scenes, target_dur=target_dur,
+                   max_window=max_window, keywords=kws)
+    return json.dumps({"ok": True, **plan}, ensure_ascii=False, indent=2)
+
+
+@mcp.tool()
 def index_info(idx_dir: str) -> str:
     """查看语义层索引的统计信息（对象/场景/ASR/大小）。"""
     idx = Path(idx_dir)

@@ -31,6 +31,7 @@ from PIL import Image, ImageDraw, ImageFont
 HF_HOME = Path.home() / ".cache/huggingface/hub"
 MODELS_ROOTS = [
     Path(__file__).resolve().parent.parent / "models",
+    Path("/Users/chuli/Documents/Codex/2026-08-06/wo/work/models"),
 ]
 DEFAULT_PROMPTS = [
     "person", "face", "hand", "phone", "smartphone", "bottle", "cup", "drink",
@@ -817,6 +818,154 @@ def query(idx_dir: Path, text=None, image=None, n=5, merge_gap=3.0):
     return merged[:n]
 
 
+def _entry_hits(objects, scenes, asr, emb, text=None, image=None,
+                topk=5, max_window=30.0):
+    """逐条目候选（不做窗口合并）：对象出现片段 + 场景 + ASR 句子。"""
+    hits = []
+
+    def add(t0, t1, score, layer, txt):
+        if t1 - t0 <= max_window:
+            hits.append((float(t0), float(t1), float(score), layer, txt))
+
+    if image:
+        clip = CLIPEmbedder()
+        q = clip.embed_images([Image.open(image).convert("RGB")])[0]
+        if len(objects) and len(emb["obj_emb"]):
+            for r in np.argsort(q @ emb["obj_emb"].T)[::-1][:topk]:
+                o = objects[r]
+                add(o["t0"], o["t1"], q @ emb["obj_emb"].T[r],
+                    f"objects:{o['label']}", o["description"])
+        if len(scenes) and len(emb["frame_emb"]):
+            for r in np.argsort(q @ emb["frame_emb"].T)[::-1][:topk]:
+                sc = scenes[r]
+                add(sc["t0"], sc["t1"], q @ emb["frame_emb"].T[r], "scenes", sc["caption"])
+    if text:
+        te = TextEmbedder()
+        q = te.embed([text])[0]
+        if len(objects) and len(emb["obj_text_emb"]):
+            scores = q @ emb["obj_text_emb"].T
+            for r in np.argsort(scores)[::-1][:topk]:
+                o = objects[r]
+                add(o["t0"], o["t1"], scores[r], f"objects:{o['label']}", o["description"])
+            labels = sorted({o["label"] for o in objects})
+            le = te.embed(labels)
+            ls = q @ le.T
+            for r in np.argsort(ls)[::-1][:topk]:
+                for o in [x for x in objects if x["label"] == labels[r]][:2]:
+                    add(o["t0"], o["t1"], ls[r], f"label:{labels[r]}", o["description"])
+        if len(scenes) and len(emb["scene_emb"]):
+            scores = q @ emb["scene_emb"].T
+            for r in np.argsort(scores)[::-1][:topk]:
+                sc = scenes[r]
+                add(sc["t0"], sc["t1"], scores[r], "scenes", sc["caption"])
+        if len(asr) and len(emb["asr_emb"]):
+            scores = q @ emb["asr_emb"].T
+            for r in np.argsort(scores)[::-1][:topk]:
+                a = asr[r]
+                add(a["start"], a["end"], scores[r], "asr", a["text"])
+    return hits
+
+
+def plan_clips(idx_dir: Path, text=None, image=None, object_labels=None,
+               require_speech=True, min_dur=5.0, max_dur=180.0,
+               max_clips=10, align_scenes=True, merge_gap=1.5, max_window=30.0,
+               target_dur=20.0, keywords=None):
+    """剪辑规划：逐条目候选 -> 对象过滤 -> 语音过滤 -> 场景对齐 -> 剪辑清单。
+
+    每条剪辑都带证据（命中的层、语音文本、语音覆盖秒数），
+    方便 agent 或人工判断"这刀剪得对不对"。
+    """
+    manifest, objects, scenes, asr, emb = load_index(idx_dir)
+    if not text and not image and not object_labels:
+        raise ValueError("需要 text / image / object_labels 至少一个")
+    keywords = [k for k in (keywords or []) if k]
+    cands = _entry_hits(objects, scenes, asr, emb, text=text, image=image,
+                        max_window=max_window)
+    if object_labels:
+        labels = set(object_labels)
+        for o in objects:
+            if o["label"] in labels and o["t1"] - o["t0"] <= max_window:
+                cands.append((o["t0"], o["t1"], 0.5,
+                              f"object:{o['label']}", o["description"]))
+    # 按 (t0,t1) 去重，保留最高分
+    best = {}
+    for t0, t1, score, layer, txt in cands:
+        key = (round(t0, 2), round(t1, 2))
+        if key not in best or score > best[key][2]:
+            best[key] = (t0, t1, score, layer, txt)
+    cands = sorted(best.values(), key=lambda c: c[0])
+    merged = []
+    for t0, t1, score, layer, txt in cands:
+        if (merged and t0 <= merged[-1][1] + merge_gap
+                and t1 - merged[-1][0] <= max_dur):
+            m = merged[-1]
+            m[1] = max(m[1], t1)
+            m[2] = max(m[2], score)
+            m[3] = m[3] + "+" + layer
+            m[4] = m[4] + " | " + txt
+        else:
+            merged.append([t0, t1, score, layer, txt])
+    clips = []
+    for t0, t1, score, layers, txt in merged:
+        speech = sum(max(0.0, min(t1, a["end"]) - max(t0, a["start"])) for a in asr)
+        if require_speech and speech < 1.0:
+            continue
+        if align_scenes:
+            # 只在 1.5 秒内有场景边界才吸附，避免把短命中撑成整场
+            bounds = [b for s in scenes for b in (s["t0"], s["t1"])]
+            near0 = [b for b in bounds if abs(b - t0) <= 1.5]
+            near1 = [b for b in bounds if abs(b - t1) <= 1.5]
+            if near0:
+                t0 = min(near0, key=lambda b: abs(b - t0))
+            if near1:
+                t1 = min(near1, key=lambda b: abs(b - t1))
+            if t1 < t0:
+                t0, t1 = t1, t0
+        if t1 - t0 < min_dur:
+            continue
+        # 超长片段按场景边界切成目标时长内的子片段
+        if t1 - t0 > target_dur and align_scenes and scenes:
+            segs = [s for s in scenes if s["t0"] < t1 and s["t1"] > t0]
+            cuts = sorted({t0} | {s["t0"] for s in segs if s["t0"] > t0} | {t1})
+            start = cuts[0]
+            for end in cuts[1:]:
+                if end - start >= min_dur:
+                    clips.append([start, end, score, layers, ""])
+                if end - start >= target_dur * 0.5:
+                    start = end
+        else:
+            clips.append([t0, t1, score, layers, ""])
+    # 去重 + 证据补全
+    best = {}
+    for t0, t1, score, layers, _ in clips:
+        key = (round(t0, 2), round(t1, 2))
+        if key not in best or score > best[key][2]:
+            best[key] = [t0, t1, score, layers]
+    out = []
+    for t0, t1, score, layers in sorted(best.values(), key=lambda c: -c[2]):
+        speech = sum(max(0.0, min(t1, a["end"]) - max(t0, a["start"])) for a in asr)
+        speech_text = " ".join(
+            a["text"] for a in asr if a["start"] < t1 and a["end"] > t0)[:200]
+        if keywords and not any(k in speech_text for k in keywords):
+            continue
+        out.append({
+            "t0": round(t0, 2), "t1": round(t1, 2), "duration": round(t1 - t0, 2),
+            "score": round(score, 3), "layers": layers,
+            "speech_sec": round(speech, 2), "speech_text": speech_text,
+        })
+        if len(out) >= max_clips:
+            break
+    return {
+        "clips": out,
+        "stats": {
+            "candidates": len(cands), "merged": len(merged), "clips": len(out),
+            "require_speech": require_speech, "align_scenes": align_scenes,
+            "max_window": max_window, "target_dur": target_dur,
+            "keywords": keywords,
+        },
+    }
+
+
 def info(idx_dir: Path):
     manifest, objects, scenes, asr, emb = load_index(idx_dir)
     print(json.dumps(manifest, ensure_ascii=False, indent=2))
@@ -831,6 +980,24 @@ def info(idx_dir: Path):
         for t in rows[:5]:
             print(f"    #{t['track_id']} {t['label']:<12} {t['t0']:>7.1f}-{t['t1']:<7.1f}s "
                   f"({t['duration_sec']}s, {t['fraction']*100:.1f}%)")
+
+
+def cut(idx_dir: Path, out_dir: Path, plan, video_path=None, padding=0.0):
+    """把 plan_clips 的剪辑清单真正切成 mp4 片段（ffmpeg -c copy，秒级）。"""
+    manifest = json.loads((idx_dir / "manifest.json").read_text(encoding="utf-8"))
+    video = Path(video_path) if video_path else Path(manifest["video"]["path"])
+    out_dir.mkdir(parents=True, exist_ok=True)
+    made = []
+    for i, c in enumerate(plan.get("clips", []), 1):
+        t0 = max(0.0, c["t0"] - padding)
+        dur = max(0.5, (c["t1"] + padding) - t0)
+        out = out_dir / f"clip_{i:02d}_{t0:.0f}-{t0+dur:.0f}s.mp4"
+        ffmpeg(["-ss", str(t0), "-i", str(video), "-t", str(dur),
+                "-c", "copy", "-avoid_negative_ts", "make_zero", "-y", str(out)])
+        made.append({"file": str(out), "t0": round(t0, 2),
+                     "t1": round(t0 + dur, 2), "source": c.get("layers", ""),
+                     "speech": c.get("speech_text", "")[:120]})
+    return {"ok": True, "clips": made, "out_dir": str(out_dir)}
 
 
 def main():
@@ -852,8 +1019,30 @@ def main():
     q.add_argument("--text", default=None)
     q.add_argument("--image", default=None)
     q.add_argument("-n", type=int, default=5)
+    p = sub.add_parser("plan")
+    p.add_argument("idx")
+    p.add_argument("--text", default=None)
+    p.add_argument("--image", default=None)
+    p.add_argument("--objects", default=None, help="逗号分隔的对象标签，如 lipstick,price tag")
+    p.add_argument("--no-speech", dest="require_speech", action="store_false", default=True)
+    p.add_argument("--min-dur", type=float, default=5.0)
+    p.add_argument("--max-dur", type=float, default=180.0)
+    p.add_argument("--max-clips", type=int, default=10)
+    p.add_argument("--max-window", type=float, default=30.0,
+                   help="候选窗口最大时长（过滤全程跟踪的宽窗口）")
+    p.add_argument("--target-dur", type=float, default=20.0,
+                   help="目标片段时长，超长片段按场景边界切分")
+    p.add_argument("--keywords", default=None,
+                   help="关键词交叉验证（逗号分隔）：片段语音必须包含任一关键词")
+    p.add_argument("--no-align-scenes", dest="align_scenes", action="store_false", default=True)
     i = sub.add_parser("info")
     i.add_argument("idx")
+    c = sub.add_parser("cut")
+    c.add_argument("idx")
+    c.add_argument("-o", "--out", required=True)
+    c.add_argument("--plan", required=True, help="plan_clips 输出的 JSON 文件")
+    c.add_argument("--video", default=None, help="视频路径（默认取 manifest 里的）")
+    c.add_argument("--padding", type=float, default=0.0)
     args = ap.parse_args()
 
     if args.cmd == "build":
@@ -865,8 +1054,23 @@ def main():
         if not args.text and not args.image:
             sys.exit("query needs --text or --image")
         query(Path(args.idx), text=args.text, image=args.image, n=args.n)
+    elif args.cmd == "plan":
+        plan = plan_clips(
+            Path(args.idx), text=args.text, image=args.image,
+            object_labels=args.objects.split(",") if args.objects else None,
+            require_speech=args.require_speech, min_dur=args.min_dur,
+            max_dur=args.max_dur, max_clips=args.max_clips,
+            align_scenes=args.align_scenes, max_window=args.max_window,
+            target_dur=args.target_dur,
+            keywords=args.keywords.split(",") if args.keywords else None)
+        print(json.dumps(plan, ensure_ascii=False, indent=2))
     elif args.cmd == "info":
         info(Path(args.idx))
+    elif args.cmd == "cut":
+        plan = json.loads(Path(args.plan).read_text(encoding="utf-8"))
+        res = cut(Path(args.idx), Path(args.out), plan,
+                  video_path=args.video, padding=args.padding)
+        print(json.dumps(res, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
