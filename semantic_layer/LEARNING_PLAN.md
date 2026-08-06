@@ -259,3 +259,42 @@ agent 怎么理解视频——全部能用"论文观点 + 你的实测"双轨回
 每周课程 4-6 小时，不挤占论文（2 篇/周）和周末实验（2-3 小时）。
 主干课 A 的章节按模块穿插学；短课（DeepLearning.AI / Hugging Face）每门 1-2 天可完成。
 学完每门课必须回答一个问题：这个知识点怎么改我的 AVIS？
+
+### 文本优先版：讲义/文档速查
+
+大部分课程"文字才是本体，视频只是配音"。下表是每门课的文本版入口，
+看文本为主、视频为辅：
+
+| 课程 | 文本版讲义 | 说明 |
+|---|---|---|
+| 李沐《动手学深度学习》 | [zh.d2l.ai](https://zh.d2l.ai/) 本身就是教科书 | HTML + 可运行 notebook，直接读章节，不用看视频 |
+| CS231n 2025 | [官方课程笔记](https://cs231n.github.io/) + [2025 讲义 PDF](https://cs231n.stanford.edu/slides/2025/lecture_1_part_1.pdf) | 笔记覆盖分类/CNN/训练/检测，讲义按讲看 |
+| 3Blue1Brown | 用 CS231n 笔记或 [Deep Learning 免费书](https://www.deeplearningbook.org/) 替代 | 纯动画课，文本上跳过 |
+| Building Multimodal Search and RAG | 课程内每节课的 notebook | notebook = 完整讲义，视频只看概念段 |
+| HF Audio Course | [文本章节](https://huggingface.co/learn/audio-course) | HF 课程全是文字 + 代码 |
+| Stanford EE398A | [讲义 PDF 索引](https://web.stanford.edu/class/ee398a/handouts/lectures/) | 重点读 InterframeCoding、MotionCompensatedCoding、MotionEstimation 三份 |
+| CMU 11-777 | [Readings 页（论文清单）](https://cmu-mmml.github.io/fall2022/readings/) | 这门课讲义就是论文 |
+| HF Computer Vision Course | [文本章节](https://huggingface.co/learn/computer-vision-course) | 直接读 |
+| Roboflow Notebooks | [GitHub notebooks](https://github.com/roboflow/notebooks) | 代码 + 注释即讲义 |
+| 同济子豪兄 YOLO 精读 | 无讲义；替代 = YOLO 论文 + CS231n 笔记检测章节 | 需要时我帮你把视频内容整理成文字笔记 |
+| OpenMMLab AI实战营 | [MMDetection 文档](https://mmdetection.readthedocs.io/zh-cn/latest/) | 视频可跳过，直接看文档 + 跑 demo |
+| EECS 498 "Videos" | [Schedule 页每讲的 Slides PDF](https://web.eecs.umich.edu/~justincj/teaching/eecs498/FA2020/schedule.html) | 讲义比录像信息密度高 |
+| UvA Deep Learning | [站点讲义与教程](https://uvadlc.github.io/) | lectures PDF + tutorial notebooks |
+| Building Multimodal Data Pipelines | 课程内 notebook | 同上 |
+| MIT 6.5940 | [课程讲义](https://hanlab.mit.edu/courses/2024-fall-65940)（每讲 slides）+ [中文笔记](https://github.com/erectbranch/MIT-Efficient-AI) | 中文笔记基本可替代录像 |
+| HF LLM Course | [文本章节](https://huggingface.co/learn/llm-course) | 直接读 |
+| Retrieval Optimization | 课程内 notebook + [Qdrant 文档](https://qdrant.tech/documentation/) | 代码即讲义 |
+| HF Agents Course | [文本章节](https://huggingface.co/learn/agents-course) | 直接读 |
+| DeepLearning.AI AI Agents | 课程内 notebook | 同上 |
+| Google ML Crash Course | [文本课程](https://developers.google.com/machine-learning/crash-course) | 本身就是文字为主 |
+| Evaluating and Debugging Generative AI | 课程内 notebook + W&B 文档 | 同上 |
+| fast.ai | [免费书](https://book.fast.ai/) + notebook | 书即讲义 |
+
+三条速读规则：
+
+1. 主干课全程文本（d2l 是书，CS231n 有官方笔记）；
+2. DeepLearning.AI / Hugging Face 短课的 notebook 就是完整讲义，视频可以不看；
+3. 纯视频课（3B1B、同济子豪兄、OpenMMLab 实战营）优先换文本替代品；
+   实在想看某段视频，把链接丢给我，我整理成结构化文字笔记。
+
+论文也同理：优先用 ar5iv（HTML 版论文）读，比 PDF 快。
